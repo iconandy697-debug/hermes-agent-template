@@ -314,6 +314,7 @@ async def lifespan(app: Starlette):
 
 # ── 路由映射 ──────────────────────────────────────────────────────────────────
 routes = [
+    Route("/", lambda r: RedirectResponse("/setup/")),
     Route("/health", lambda r: JSONResponse({"status":"ok"})),
     Route("/setup/api/config", api_config_get, methods=["GET"]),
     Route("/setup/api/config", api_config_put, methods=["POST"]),
