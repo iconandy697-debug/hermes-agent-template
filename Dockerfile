@@ -66,8 +66,11 @@ COPY templates/ /app/templates/
 COPY start.sh /app/start.sh
 RUN chmod +x /app/start.sh
 
-ENV HOME=/data
-ENV HERMES_HOME=/data/.hermes
+WORKDIR /app
+COPY . /app
+
+ENTRYPOINT ["/usr/bin/tini", "-g", "--"]
+CMD ["bash", "start.sh"]
 
 # tini wraps start.sh so it runs as PID 1's child instead of as PID 1 itself.
 # `-g` propagates signals to the whole process group so `docker stop` /
