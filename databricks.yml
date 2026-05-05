@@ -1,2 +1,13 @@
-runtime:
-  command: bash start.sh
+bundle:
+  name: hermes-agent
+
+resources:
+  apps:
+    hermes_app:
+      name: "hermes-agent-service"
+      runtime:
+        command: ["/bin/bash", "/app/start.sh"]
+      deployment_config:
+        port: 8000
+      http_endpoint:
+        health_check_path: "/health"
