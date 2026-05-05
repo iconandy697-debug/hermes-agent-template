@@ -68,8 +68,8 @@ HERMES_DASHBOARD_URL = f"http://{HERMES_DASHBOARD_HOST}:{HERMES_DASHBOARD_PORT}"
 # ways that produced spurious 401s.
 HOP_BY_HOP = {"host", "transfer-encoding"}
 
-ADMIN_USERNAME = admin
-ADMIN_PASSWORD = 123456aa
+ADMIN_USERNAME = "admin"
+ADMIN_PASSWORD = "123456aa"
 if not ADMIN_PASSWORD:
     ADMIN_PASSWORD = secrets.token_urlsafe(16)
     print(f"[server] Admin credentials — username: {ADMIN_USERNAME}  password: {ADMIN_PASSWORD}", flush=True)
