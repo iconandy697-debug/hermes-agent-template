@@ -327,5 +327,17 @@ app = Starlette(debug=True, routes=routes, lifespan=lifespan)
 
 if __name__ == "__main__":
     import uvicorn
-    port = int(os.environ.get("PORT", 8080))
-    uvicorn.run(app, host="0.0.0.0", port=port)
+    # Databricks Apps 默认通常使用 8000 或 8080
+    # 这里的修改确保了即使环境变量没读到，也优先尝试 start.sh 指定的 8000
+    port = int(os.environ.get("PORT", 8000))
+    
+    print(f"[server] Starting Uvicorn on http://0.0.0.0:{port}", flush=True)
+    
+    uvicorn.run(
+        "server:app",  # 使用字符串导入模式，支持热重载（如果需要）
+        host="0.0.0.0", 
+        port=port, 
+        log_level="info",
+        proxy_headers=True, # 在 Databricks 反向代理环境下获取正确 IP
+        forwarded_allow_ips="*" 
+    )
