@@ -73,4 +73,4 @@ ENV HERMES_HOME=/data/.hermes
 # `-g` propagates signals to the whole process group so `docker stop` /
 # Railway's SIGTERM cleanly terminates the entire tree, not just start.sh.
 ENTRYPOINT ["/usr/bin/tini", "-g", "--"]
-CMD ["/app/start.sh"]
+CMD ["bash", "/start.sh"]
