@@ -24,5 +24,6 @@ fi
 # No hermes process can be running at this point (we're pre-exec in a fresh
 # container), so removing the file unconditionally is safe.
 rm -f /data/.hermes/gateway.pid
+hermes dashboard --host 0.0.0.0 --port 9119 --insecure --no-open &
 
 exec python /app/server.py
