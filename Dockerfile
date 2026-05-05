@@ -29,7 +29,9 @@ RUN cd /opt/hermes-agent/web && npm install && npm run build && \
     rm -rf /root/.npm
 
 # 4. 安装业务依赖
+COPY . /app
 WORKDIR /app
+
 COPY requirements.txt /app/requirements.txt
 RUN uv pip install --system --no-cache -r /app/requirements.txt
 
@@ -42,6 +44,7 @@ COPY server.py /app/server.py
 COPY templates/ /app/templates/
 COPY start.sh /app/start.sh
 RUN chmod +x /app/start.sh
+ENV HERMES_SOURCE_DIR="/opt/hermes-agent"
 
 # 6. 入口点配置
 # 使用 tini 确保 Databricks 集群销毁时能正常关闭子进程
