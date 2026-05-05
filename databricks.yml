@@ -1,0 +1,2 @@
+runtime:
+  command: bash start.sh
