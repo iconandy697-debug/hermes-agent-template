@@ -26,4 +26,6 @@ fi
 rm -f /data/.hermes/gateway.pid
 hermes dashboard --host 0.0.0.0 --port 9119 --insecure --no-open &
 
-exec python /app/server.py
+python /app/server.py
+tail -f /dev/null
+
