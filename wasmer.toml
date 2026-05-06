@@ -1,0 +1,20 @@
+[package]
+name = "iconandy697/hermes001"
+version = "0.1.0"
+description = "Hermes Agent on Wasmer Edge"
+
+[[app.storage]]
+volume = "data"
+mount = "/data"
+
+[http.server]
+kind = "host"
+
+[[commands]]
+name = "web"
+source = "python"
+# 注意：这里的 main:app 必须对应你的文件名和变量名
+args = ["-m", "uvicorn", "server:app", "--host", "0.0.0.0", "--port", "$PORT"]
+
+[dependencies]
+"python" = "3.12"
