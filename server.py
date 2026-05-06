@@ -5,16 +5,18 @@ from starlette.applications import Starlette
 from starlette.responses import JSONResponse, RedirectResponse, HTMLResponse
 from starlette.routing import Route
 
-# 路径配置
-ENV_FILE_PATH = "/data/.hermes/.env"
+# 路径配置：优先使用 /data 挂载点，否则使用当前目录
+STORAGE_DIR = "/data" if os.path.exists("/data") else "."
+ENV_FILE_PATH = os.path.join(STORAGE_DIR, ".env")
 
 def get_index_html():
     try:
+        # 确保 templates 文件夹在 server.py 同级目录
         template_path = os.path.join(os.path.dirname(__file__), "templates", "index.html")
         with open(template_path, "r", encoding="utf-8") as f:
             return f.read()
     except FileNotFoundError:
-        return "<h1>Error: templates/index.html not found</h1>"
+        return "<h1>Error: templates/index.html not found</h1><p>Please check your file structure.</p>"
 
 # --- API 处理函数 ---
 
@@ -35,27 +37,26 @@ async def get_status(request):
         "isSetupDone": setup_done
     })
 
-# 解决 /setup/api/logs 404
 async def get_logs(request):
-    # 返回一段模拟日志，或者你可以读取真实的后台日志文件
     return JSONResponse({
         "logs": ["System started...", "Waiting for configuration..."]
     })
 
-# 解决 /setup/api/pairing/... 404
 async def get_pairing_pending(request):
-    return JSONResponse([]) # 返回空列表表示没有待配对设备
+    return JSONResponse([]) 
 
 async def get_pairing_approved(request):
-    return JSONResponse([]) # 返回空列表表示没有已配对设备
+    return JSONResponse([]) 
 
-# 保存配置
 async def save_config(request):
     try:
         payload = await request.json()
         config_vars = payload.get("vars", {})
         env_content = "\n".join([f"{k}={v}" for k, v in config_vars.items() if v])
+        
+        # 确保目录存在
         os.makedirs(os.path.dirname(ENV_FILE_PATH), exist_ok=True)
+        
         with open(ENV_FILE_PATH, "w", encoding="utf-8") as f:
             f.write(env_content)
         return JSONResponse({"ok": True})
@@ -79,4 +80,4 @@ app = Starlette(debug=True, routes=routes)
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 8000))
-    uvicorn.run(app, host="0.0.0.0", port=port, proxy_headers=True, forwarded_allow_ips="*")
+    uvicorn.run(app, host="0.0.0.0", port=port)
