@@ -1,10 +1,11 @@
 [package]
 name = "iconandy697/hermes001"
 version = "0.1.0"
-description = "Hermes Agent on Wasmer Edge"
+description = "Hermes Agent Template"
 
 [[app.storage]]
-volume = "data"
+# 这允许你的应用在重启后依然记住配置
+volume = "hermes-data"
 mount = "/data"
 
 [http.server]
@@ -13,7 +14,7 @@ kind = "host"
 [[commands]]
 name = "web"
 source = "python"
-# 注意：这里的 main:app 必须对应你的文件名和变量名
+# 关键：这里明确指定运行 server.py 里的 app 对象
 args = ["-m", "uvicorn", "server:app", "--host", "0.0.0.0", "--port", "$PORT"]
 
 [dependencies]
